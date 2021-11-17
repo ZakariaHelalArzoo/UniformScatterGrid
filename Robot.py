@@ -1,3 +1,4 @@
+from typing import ItemsView
 from typing_extensions import final
 import Coordinate
 class Robot:
@@ -31,6 +32,14 @@ class Robot:
                 return False
         return True
 
+    @staticmethod
+    def isWestVacant(neighbours, coordinate):
+        for x in range(xMin, coordinate.getX()):
+            if Robot.isPositionEmpty(neighbours, Coordinate(x, coordinate.getY())):
+                return True
+        
+        return False
+
     def FormGrid(self, n, gridFinal, yMax, xMin, neighbours):
 
         [rc, d] = gridFinal
@@ -41,12 +50,15 @@ class Robot:
         # Robot is <d rows away
         # Robot moves north. If blocked, moves eastward till a vacant north is found 
         if j <= d and j%2 == 0:
-            while self.y == j:
+            while True:
                 if Robot.isPositionEmpty(neighbours, finalCoordinate):
                     finalCoordinate.setY(finalCoordinate.getY()+1)
                     j-=1
+                    break
+
                 elif Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()+1, finalCoordinate.getY())):
                     finalCoordinate.setX(finalCoordinate.getX()+1)
+                
                 else:
                     return -1
         
@@ -62,7 +74,17 @@ class Robot:
             else:
                 return -1
         
-
+        # Case 3
+        # Robot is not in Xmin and not in alternative rows
+        # Robot moves west if west is empty else moves east or waits
+        while finalCoordinate.getX() != xMin and (finalCoordinate.getY() - yMax) % 2 != 0:
+            if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()-1, finalCoordinate.getY())) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()-2, finalCoordinate.getY())):
+                finalCoordinate.setX(finalCoordinate.getX() - 1)
+            elif not Robot.isWestVacant(neighbours, finalCoordinate):
+                if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()+1, finalCoordinate.getY())) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()+2, finalCoordinate.getY())):
+                    finalCoordinate.setX(finalCoordinate.getX() + 1)
+            else:
+                return -1
 
 
 

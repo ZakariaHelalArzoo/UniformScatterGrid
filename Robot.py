@@ -1,5 +1,3 @@
-from typing import ItemsView
-from typing_extensions import final
 import Coordinate
 class Robot:
     def __init__(self, id) -> None:
@@ -33,12 +31,19 @@ class Robot:
         return True
 
     @staticmethod
-    def isWestVacant(neighbours, coordinate):
+    def isWestVacant(neighbours, coordinate, xMin):
         for x in range(xMin, coordinate.getX()):
             if Robot.isPositionEmpty(neighbours, Coordinate(x, coordinate.getY())):
                 return True
         
         return False
+
+    @staticmethod
+    def isInAlternates(neighbours, coordinate, xMin):
+        for robot in neighbours:
+            if robot.coordinate.getY() == coordinate.getY() and (robot.coordinate.getX() - xMin)%2!=0:
+                return False
+        return True
 
     def FormGrid(self, n, gridFinal, yMax, xMin, neighbours):
 
@@ -80,11 +85,16 @@ class Robot:
         while finalCoordinate.getX() != xMin and (finalCoordinate.getY() - yMax) % 2 != 0:
             if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()-1, finalCoordinate.getY())) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()-2, finalCoordinate.getY())):
                 finalCoordinate.setX(finalCoordinate.getX() - 1)
-            elif not Robot.isWestVacant(neighbours, finalCoordinate):
+            elif not Robot.isWestVacant(neighbours, finalCoordinate, xMin):
                 if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()+1, finalCoordinate.getY())) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()+2, finalCoordinate.getY())):
                     finalCoordinate.setX(finalCoordinate.getX() + 1)
             else:
                 return -1
+
+        # Case 4
+        # Robot moves to odd row north if all nodes are in alternate and is in among first rc robots in row and target row above is empty
+        while Robot.isInAlternates(neighbours, finalCoordinate, xMin) and finalCoordinate.getY() != yMax and finalCoordinate.getX() <= xMin + 2*(rc-1) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY() - 2)):
+            finalCoordinate.setY(finalCoordinate.getY() - 2)
 
 
 

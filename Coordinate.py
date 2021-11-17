@@ -20,4 +20,6 @@ class Coordinate:
     def getDistance(self, coordinate):
         return math.abs(self.x - coordinate.x) + math.abs(self.y - coordinate.y)
     
+    def isEqual(self, coordinate):
+        return self.x == coordinate.getX() and self.y == coordinate.getY()
     

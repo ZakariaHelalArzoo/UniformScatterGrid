@@ -32,11 +32,19 @@ class Robot:
 
     @staticmethod
     def isWestVacant(neighbours, coordinate, xMin):
-        for x in range(xMin, coordinate.getX()):
+        for x in range(xMin, coordinate.getX(), 2):
             if Robot.isPositionEmpty(neighbours, Coordinate(x, coordinate.getY())):
                 return True
         
         return False
+
+    @staticmethod
+    def countRobotsToWest(neighbours, coordinate):
+        count = 0
+        for robot in neighbours:
+            if robot.coordinate.getY() == coordinate.getY() and robot.coordinate.getX() < coordinate.getX():
+                count += 1
+        return count
 
     @staticmethod
     def isInAlternates(neighbours, coordinate, xMin):
@@ -54,7 +62,7 @@ class Robot:
         # Case 1
         # Robot is <d rows away
         # Robot moves north. If blocked, moves eastward till a vacant north is found 
-        if j <= d and j%2 == 0:
+        if j <= d and j%2 == 1:
             while True:
                 if Robot.isPositionEmpty(neighbours, finalCoordinate):
                     finalCoordinate.setY(finalCoordinate.getY()+1)
@@ -96,10 +104,43 @@ class Robot:
         while Robot.isInAlternates(neighbours, finalCoordinate, xMin) and finalCoordinate.getY() != yMax and finalCoordinate.getX() <= xMin + 2*(rc-1) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY() - 2)):
             finalCoordinate.setY(finalCoordinate.getY() - 2)
 
+        # Case 5
+        #
+        if j==0 and finalCoordinate.getX() > xMin + 2*(rc - 1):
+            if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()+2)):
+                while Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()+2)):
+                    flag = False
+                    finalCoordinate.setY(finalCoordinate.getY() + 2)
+                    if Robot.countRobotsToWest(neighbours, finalCoordinate) < rc:
+                        #TODO:  make case 3 function and call here
+                        break
+            else:
+                return -1
+                
+        elif j>1 and finalCoordinate.getX() > xMin + 2*(rc - 1):
+            flag = False
+            for row in range(yMax, finalCoordinate.getY(), 2):
+                if Robot.countRobotsToWest(neighbours, Coordinate(finalCoordinate.getX(), row)) < rc:
+                    flag = True
+                    break
+            
+            if flag:
+                if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()-2)):
+                    while Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()-2)):
+                        finalCoordinate.setY(finalCoordinate.getY() - 2)
+                        if Robot.countRobotsToWest(neighbours, finalCoordinate) < rc:
+                            #TODO:  make case 3 function and call here
+                            break
+                else:
+                    return -1
+            else:
+                if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()+2)):
+                    while Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()+2)):
+                        finalCoordinate.setY(finalCoordinate.getY() + 2)
+                        if Robot.countRobotsToWest(neighbours, finalCoordinate) < rc:
+                            #TODO:  make case 3 function and call here
+                            break
+                else:
+                    return -1
 
-
-
-
-
-
-         
+            return finalCoordinate

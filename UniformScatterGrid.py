@@ -46,6 +46,8 @@ class UniformScatterGrid:
             for robot in self.robots:
                 neighbours = robot.look(self.robots)
                 coordinates = robot.compute(self.n, gridFinal, xMin, yMax, neighbours)
+                #TODO: Implement priority ordering of movement (w->e->s->n)
+                #TODO: If tie, check priority.If priority same, make arbitrary choice
                 if coordinates != -1:
                     robot.move(coordinates)
             Grid.render(self.robots)

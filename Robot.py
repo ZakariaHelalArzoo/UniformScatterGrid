@@ -69,6 +69,7 @@ class Robot:
 
         return finalCoordinate
 
+    #TODO: Remove case 3 implementation in case 5
     def FormGrid(self, n, gridFinal, yMax, xMin, neighbours):
 
         [rc, d] = gridFinal
@@ -104,8 +105,11 @@ class Robot:
         #         return -1
         
         # # Case 3
-        # # Robot is not in Xmin and not in alternative rows
+        # # Robot is not in Xmin and not in alternative nodes
         # # Robot moves west if west is empty else moves east or waits
+        # # TODO: Robot moves eastward to target node if no vacant node on west
+        # # TODO: Calculate target node by xMin + (no of robot in west)*2
+        # # TODO: Doubt:- Robot moves arbitrary steps or single step in one cycle.
         # self.case3(xMin, yMax, neighbours, finalCoordinate)
 
         # # Case 4
@@ -130,7 +134,7 @@ class Robot:
         #                 break
         #     else:
         #         return -1
-                
+        
         # elif j>1 and finalCoordinate.getX() > xMin + 2*(rc - 1):
         #     flag = False
         #     for row in range(yMax, finalCoordinate.getY(), 2):

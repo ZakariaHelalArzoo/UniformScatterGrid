@@ -18,13 +18,13 @@ class UniformScatterGrid:
     @staticmethod
     def findDimension(n):
         rc = math.ceil(math.sqrt(n))
-        d = 2 * rc - 1
+        d = 2 * (rc - 1)
         return rc, d
 
     def findYmax(self):
         ymax = self.robots[0].coordinate.getY()
         for robot in self.robots:
-            ymax = max(robot.coordinate.getY(), ymax)
+            ymax = min(robot.coordinate.getY(), ymax)
 
         return ymax
 
@@ -39,18 +39,27 @@ class UniformScatterGrid:
         xMin = self.findXmin()
         yMax = self.findYmax()
         gridFinal = UniformScatterGrid.findDimension(self.n)
+
+        print (xMin, ",", yMax)
         
         Grid.render(self.robots)
 
+        print (self.robots)
+
         while True:
+            coordinates = []
             for robot in self.robots:
                 neighbours = robot.look(self.robots)
-                coordinates = robot.compute(self.n, gridFinal, xMin, yMax, neighbours)
+                coordinates.append(robot.compute(self.n, gridFinal, xMin, yMax, neighbours))
                 #TODO: Implement priority ordering of movement (w->e->s->n)
                 #TODO: If tie, check priority.If priority same, make arbitrary choice
-                if coordinates != -1:
-                    robot.move(coordinates)
-            Grid.render(self.robots)
+            for robot in self.robots:
+                if coordinates[robot.id] != -1:
+                    robot.move(coordinates[robot.id])
+            # Grid.render(self.robots)
+
+            print (self.robots)
+
 
 if __name__ == "__main__":
    obj = UniformScatterGrid()

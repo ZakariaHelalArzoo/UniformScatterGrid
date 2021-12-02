@@ -6,8 +6,8 @@ from Coordinate import Coordinate
 
 BLACK = (0, 0, 0)
 WHITE = (200, 200, 200)
-WINDOW_HEIGHT = 400
-WINDOW_WIDTH = 400
+WINDOW_HEIGHT = 800
+WINDOW_WIDTH = 800
 ROBOT_RADIUS = 10
 BLOCK_SIZE = 40 #Set the size of the grid block
 
@@ -20,10 +20,10 @@ def render(robots):
 
     drawGrid()
     renderRobots(robots)
-    # for event in pygame.event.get():
-    #     if event.type == pygame.QUIT:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
             
-    #         sys.exit()
+            sys.exit()
     
     time.sleep(2)
     pygame.display.update()

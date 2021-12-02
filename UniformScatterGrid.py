@@ -6,7 +6,7 @@ import Grid
 class UniformScatterGrid:
 
     def __init__(self):
-        self.n = 9
+        self.n = 4
         self.robots = [] 
 
         for i in range(self.n):
@@ -46,17 +46,26 @@ class UniformScatterGrid:
 
         print (self.robots)
 
-        while True:
+        next_move = True
+
+        while next_move:
             coordinates = []
+            next_move = False
             for robot in self.robots:
                 neighbours = robot.look(self.robots)
-                coordinates.append(robot.compute(self.n, gridFinal, xMin, yMax, neighbours))
+                coordinate = robot.compute(self.n, gridFinal, xMin, yMax, neighbours)
+
+                if not robot.coordinate.isEqual(coordinate):
+                    next_move = True
+
+                coordinates.append(coordinate)
                 #TODO: Implement priority ordering of movement (w->e->s->n)
                 #TODO: If tie, check priority.If priority same, make arbitrary choice
-            for robot in self.robots:
-                if coordinates[robot.id] != -1:
-                    robot.move(coordinates[robot.id])
-            # Grid.render(self.robots)
+
+            for ind, robot in enumerate(self.robots):
+                robot.move(coordinates[ind])
+
+            Grid.render(self.robots)
 
             print (self.robots)
 

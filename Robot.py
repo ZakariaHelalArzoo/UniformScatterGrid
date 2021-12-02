@@ -71,33 +71,36 @@ class Robot:
         # Case 1
         # Robot is <d rows away
         # Robot moves north. If blocked, moves eastward till a vacant north is found 
-        if j <= d and j%2 == 1:
+        if j < d and j%2 == 1:
             while True:
-                if Robot.isPositionEmpty(neighbours, finalCoordinate):
-                    finalCoordinate.setY(finalCoordinate.getY()-1)
-                    j-=1
-                    break
+                if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()-1)):
+                    finalCoordinate.setY(finalCoordinate.getY() - 1)
+                    return finalCoordinate
 
                 elif Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()+1, finalCoordinate.getY())):
-                    finalCoordinate.setX(finalCoordinate.getX()+1)
-                
-                # else:
-                #     return -1
+                    finalCoordinate.setX(finalCoordinate.getX() + 1)
+
+                else:
+                    return self.coordinate
+
         print ("In form grid for Robot:", self.id, " Done 1")
         print (finalCoordinate)
 
         # Case 2
         # Robot is >d rows away
         # Robot moves north. If blocked, moves east till north is vacant
-        while j > d:
+        while j >= d:
             print (finalCoordinate)
-            if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()-1)):
-                finalCoordinate.setY(finalCoordinate.getY()-1)
+            if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY() - 1)):
+                finalCoordinate.setY(finalCoordinate.getY() - 1)
                 j-=1
-            elif Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()+1, finalCoordinate.getY())):
-                finalCoordinate.setX(finalCoordinate.getX()+1)
-            # else:
-            #     return -1
+
+            elif Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX() + 1, finalCoordinate.getY())):
+                finalCoordinate.setX(finalCoordinate.getX() + 1)
+
+            else:
+                return self.coordinate
+
         print ("In form grid for Robot:", self.id, " Done 2")
         print (finalCoordinate)
 

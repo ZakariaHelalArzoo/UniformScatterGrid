@@ -8,13 +8,25 @@ import Grid
 class UniformScatterGrid:
 
     def __init__(self):
-        self.n = 69
+        self.n = 50
         self.robots = [] 
-
+        positions = {}
         for i in range(self.n):
-            xCor = random.randint(0, Grid.WINDOW_WIDTH) // Grid.BLOCK_SIZE
-            yCor = random.randint(0, Grid.WINDOW_HEIGHT) // Grid.BLOCK_SIZE
-            self.robots.append(Robot(i, Coordinate(xCor, yCor)))
+            while True:
+                xCor = random.randint(0, Grid.WINDOW_WIDTH) // Grid.BLOCK_SIZE
+                yCor = random.randint(0, Grid.WINDOW_HEIGHT) // Grid.BLOCK_SIZE
+                key = hash(Coordinate(xCor, yCor))
+                if key in positions:
+                    continue
+                else:
+                    self.robots.append(Robot(i, Coordinate(xCor, yCor)))
+                    break
+
+        # self.robots.append(Robot(0, Coordinate(0, 0)))
+        # self.robots.append(Robot(1, Coordinate(1, 0)))
+        # self.robots.append(Robot(2, Coordinate(2, 0)))
+        # self.robots.append(Robot(3, Coordinate(0, 2)))
+            
 
         
     @staticmethod
@@ -39,29 +51,27 @@ class UniformScatterGrid:
 
     def assignMovementPritority(self, ids, new_coordinates):
         priorities = {}
-        for id in ids:
-            if self.robots[id].coordinate.getX() > new_coordinates[id].getX():
-                priorities[id] = 4
+        for index, id in enumerate(ids):
+            if self.robots[id].coordinate.getX() >= new_coordinates[id].getX():
+                priorities[index] = 4
             elif self.robots[id].coordinate.getX() < new_coordinates[id].getX():
-                priorities[id] = 3
-            elif self.robots[id].coordinate.getY() > new_coordinates[id].getY():
-                priorities[id] = 2
+                priorities[index] = 3
+            elif self.robots[id].coordinate.getY() <= new_coordinates[id].getY():
+                priorities[index] = 2
             else:
-                priorities[id] = 1
+                priorities[index] = 1
 
         return priorities
 
     def get_max_priority(self, ids, new_coordinates):
-        #TODO: Implement priority ordering of movement (w->e->s->n)
-        #TODO: If tie, check priority.If priority same, make arbitrary choice
         movement_priorites = self.assignMovementPritority(ids ,new_coordinates)
         
-        max_priority_id = ids[0]
-        for id in ids:
-            if movement_priorites[id] > movement_priorites[max_priority_id]:
-                max_priority_id = id
+        max_priority_id_index = 0
+        for index, _ in enumerate(ids):
+            if movement_priorites[index] > movement_priorites[max_priority_id_index]:
+                max_priority_id_index = index
 
-        return max_priority_id
+        return ids[max_priority_id_index]
 
 
     def executeCycle(self):
@@ -106,8 +116,10 @@ class UniformScatterGrid:
 
 
 if __name__ == "__main__":
-    obj = UniformScatterGrid()
-    obj.executeCycle()
-    print("Finished")
+
+    for i in range(50):
+        obj = UniformScatterGrid()
+        obj.executeCycle()
+        print("Finished ", i)
     while True:
         continue

@@ -76,7 +76,7 @@ class Robot:
             while True:
                 if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()-1)):
                     finalCoordinate.setY(finalCoordinate.getY() - 1)
-                    break
+                    return finalCoordinate
 
                 elif Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()+1, finalCoordinate.getY())):
                     finalCoordinate.setX(finalCoordinate.getX() + 1)
@@ -90,25 +90,35 @@ class Robot:
         # Case 2
         # Robot is >d rows away
         # Robot moves north. If blocked, moves east till north is vacant
+
+        moved_in_case_2 = False
         while j >= d:
             print(f"{self.id} in case 2")
             if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY() - 1)):
                 finalCoordinate.setY(finalCoordinate.getY() - 1)
                 j-=1
+                moved_in_case_2 = True
 
             elif Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX() + 1, finalCoordinate.getY())):
                 finalCoordinate.setX(finalCoordinate.getX() + 1)
+                moved_in_case_2 = True
 
             else:
                 return self.coordinate
 
+        if moved_in_case_2:
+            return finalCoordinate
         
+        print ("In form grid for Robot:", self.id, " Done 2")
+        print (finalCoordinate)
+
         # Case 3
         # Robot is not in Xmin and not in alternative nodes
         # Robot moves west if west is empty else moves east or waits
         # DONE: Robot moves eastward to target node if no vacant node on west
         # DONE: Calculate target node by xMin + (no of robot in west)*2
         # DONE: Doubt:- Robot moves arbitrary steps or single step in one cycle.
+        moved_in_case_3 = False
         while finalCoordinate.getX() != xMin and (finalCoordinate.getY() - yMax) % 2 == 0:
             print(f"{self.id} in case 3")
             toWest = Robot.countRobotsToWest (neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()))
@@ -118,13 +128,18 @@ class Robot:
             if finalCoordinate.getX() < ((toWest)*2 + xMin):
                 if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()+1, finalCoordinate.getY())) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()+2, finalCoordinate.getY())):
                     finalCoordinate.setX(finalCoordinate.getX() + 1)
+                    moved_in_case_3 = True
                 else:
-                    break
+                    return finalCoordinate
 
             elif Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()-1, finalCoordinate.getY())) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()-2, finalCoordinate.getY())):
                 finalCoordinate.setX(finalCoordinate.getX() - 1)
+                moved_in_case_3 = True
             else:
                 break
+
+        if moved_in_case_3:
+            return finalCoordinate
 
         print ("In form grid for Robot:", self.id, " Done 3")
         print (finalCoordinate)
@@ -132,9 +147,14 @@ class Robot:
 
         # # Case 4
         # # Robot moves to odd row north if all nodes are in alternate and is in among first rc robots in row and target row above is empty
+        moved_in_case_4 = False
         while Robot.isInAlternates(neighbours, finalCoordinate, xMin) and finalCoordinate.getY() != yMax and finalCoordinate.getX() <= xMin + 2*(rc-1) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY() - 2)):
             print (finalCoordinate)
             finalCoordinate.setY(finalCoordinate.getY() - 2)
+            moved_in_case_4 = True
+
+        if moved_in_case_4:
+            return finalCoordinate
 
         print ("In form grid for Robot:", self.id, " Done 4")
         print (finalCoordinate)

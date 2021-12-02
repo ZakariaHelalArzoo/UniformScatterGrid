@@ -76,6 +76,7 @@ class Robot:
             while True:
                 if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()-1)):
                     finalCoordinate.setY(finalCoordinate.getY() - 1)
+                    break
 
                 elif Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()+1, finalCoordinate.getY())):
                     finalCoordinate.setX(finalCoordinate.getX() + 1)
@@ -114,13 +115,14 @@ class Robot:
             if finalCoordinate.getX() == toWest*2 + xMin:
                 break
 
-            if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()-1, finalCoordinate.getY())) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()-2, finalCoordinate.getY())):
-                finalCoordinate.setX(finalCoordinate.getX() - 1)
-
-            elif finalCoordinate.getX() < ((toWest)*2 + xMin):
+            if finalCoordinate.getX() < ((toWest)*2 + xMin):
                 if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()+1, finalCoordinate.getY())) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()+2, finalCoordinate.getY())):
                     finalCoordinate.setX(finalCoordinate.getX() + 1)
+                else:
+                    break
 
+            elif Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()-1, finalCoordinate.getY())) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX()-2, finalCoordinate.getY())):
+                finalCoordinate.setX(finalCoordinate.getX() - 1)
             else:
                 break
 

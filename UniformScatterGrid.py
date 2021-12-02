@@ -8,7 +8,7 @@ import Grid
 class UniformScatterGrid:
 
     def __init__(self):
-        self.n = 4
+        self.n = 69
         self.robots = [] 
 
         for i in range(self.n):

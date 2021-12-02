@@ -26,7 +26,7 @@ def render(robots):
             
             sys.exit()
     
-    time.sleep(2)
+    # time.sleep(2)
     pygame.display.update()
 
 

@@ -1,4 +1,4 @@
-import pygame
+import pygame, pygame.freetype
 import sys
 import time
 from Robot import Robot
@@ -16,6 +16,7 @@ def render(robots):
     global WINDOW
     pygame.init()
     WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
     WINDOW.fill(BLACK)
 
     drawGrid()

@@ -26,3 +26,8 @@ class Coordinate:
     def isEqual(self, coordinate):
         return self.x == coordinate.getX() and self.y == coordinate.getY()
     
+    def __hash__(self) -> int:
+        return hash((self.x, self.y))
+
+    def __eq__(self, __o: object) -> bool:
+        return self.isEqual(__o)

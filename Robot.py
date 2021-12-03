@@ -175,16 +175,16 @@ class Robot:
                         #     return -1
                         # else:
                         #     finalCoordinate = c3
-                        break
+                        return finalCoordinate
             # else:
             #     return -1
         
-        elif j>1 and finalCoordinate.getX() > xMin + 2*(rc - 1):
+        elif j>=1 and finalCoordinate.getX() > xMin + 2*(rc - 1):
             flag = False
             for row in range(yMax, finalCoordinate.getY(), 2):
                 if Robot.countRobotsToWest(neighbours, Coordinate(finalCoordinate.getX(), row)) < rc:
                     flag = True
-                    break
+                    return finalCoordinate
             
             if flag:
                 if Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()-2)):
@@ -197,7 +197,7 @@ class Robot:
                             #     return -1
                             # else:
                             #     finalCoordinate = c3
-                            break
+                            return finalCoordinate
                 # else:
                 #     return -1
             else:
@@ -211,7 +211,7 @@ class Robot:
                             #     return -1
                             # else:
                             #     finalCoordinate = c3
-                            break
+                            return finalCoordinate
                 # else:
                 #     return -1
 

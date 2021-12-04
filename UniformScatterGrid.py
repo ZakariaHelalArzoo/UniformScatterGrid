@@ -2,13 +2,16 @@ import random
 import math
 import time
 from collections import defaultdict
+
+import pygame
+import sys
 from Coordinate import Coordinate
 from Robot import Robot
 import Grid
 class UniformScatterGrid:
 
     def __init__(self):
-        self.n = 50
+        self.n = 100
         self.robots = [] 
         positions = set()
         for i in range(self.n):

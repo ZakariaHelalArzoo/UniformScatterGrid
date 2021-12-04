@@ -10,10 +10,6 @@ class Robot:
 
     def __repr__ (self):
         return f"Robot: {self.id} {self.coordinate}"
-    
-    def setCoordinate(self, x, y):
-        self.coordinate.setX(x)
-        self.coordinate.setY(y)
 
     def look(self, robots):
         neighbours = []
@@ -37,14 +33,6 @@ class Robot:
         return True
 
     @staticmethod
-    def isWestVacant(neighbours, coordinate, xMin):
-        for x in range(xMin, coordinate.getX(), 2):
-            if Robot.isPositionEmpty(neighbours, Coordinate(x, coordinate.getY())):
-                return True
-        
-        return False
-
-    @staticmethod
     def countRobotsToWest(neighbours, coordinate):
         count = 0
         for robot in neighbours:
@@ -52,14 +40,6 @@ class Robot:
                 count += 1
         return count
 
-    @staticmethod
-    def isInAlternates(neighbours, coordinate, xMin):
-        for robot in neighbours:
-            if robot.coordinate.getY() == coordinate.getY() and (robot.coordinate.getX() - xMin)%2!=0:
-                return False
-        return True
-
-    #TODO: Remove case 3 implementation in case 5
     def FormGrid(self, n, gridFinal, xMin, yMax, neighbours):
 
         print ("In form grid for Robot:", self.id)
@@ -115,8 +95,6 @@ class Robot:
         # Case 3
         # Robot is not in Xmin and not in alternative nodes
         # Robot moves west if west is empty else moves east or waits
-        # DONE: Robot moves eastward to target node if no vacant node on west
-        # DONE: Calculate target node by xMin + (no of robot in west)*2
         # DONE: Doubt:- Robot moves arbitrary steps or single step in one cycle.
         moved_in_case_3 = False
         while finalCoordinate.getX() != xMin and (finalCoordinate.getY() - yMax) % 2 == 0:
@@ -148,7 +126,7 @@ class Robot:
         # # Case 4
         # # Robot moves to odd row north if all nodes are in alternate and is in among first rc robots in row and target row above is empty
         moved_in_case_4 = False
-        while Robot.isInAlternates(neighbours, finalCoordinate, xMin) and finalCoordinate.getY() != yMax and finalCoordinate.getX() <= xMin + 2*(rc-1) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY() - 2)):
+        while finalCoordinate.getY() != yMax and finalCoordinate.getX() <= xMin + 2*(rc-1) and Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY() - 2)):
             print (finalCoordinate)
             finalCoordinate.setY(finalCoordinate.getY() - 2)
             moved_in_case_4 = True
@@ -169,12 +147,6 @@ class Robot:
                     flag = False
                     finalCoordinate.setY(finalCoordinate.getY() + 2)
                     if Robot.countRobotsToWest(neighbours, finalCoordinate) < rc:
-                        #TODO:  make case 3 function and call here
-                        # c3 = self.case3(xMin, yMax, neighbours, finalCoordinate)
-                        # if c3 == -1:
-                        #     return -1
-                        # else:
-                        #     finalCoordinate = c3
                         return finalCoordinate
             # else:
             #     return -1
@@ -205,12 +177,6 @@ class Robot:
                     while Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()+2)):
                         finalCoordinate.setY(finalCoordinate.getY() + 2)
                         if Robot.countRobotsToWest(neighbours, finalCoordinate) < rc:
-                            # #TODO:  make case 3 function and call here
-                            # c3 = self.case3(xMin, yMax, neighbours, finalCoordinate)
-                            # if c3 == -1:
-                            #     return -1
-                            # else:
-                            #     finalCoordinate = c3
                             return finalCoordinate
                 # else:
                 #     return -1

@@ -163,12 +163,6 @@ class Robot:
                     while Robot.isPositionEmpty(neighbours, Coordinate(finalCoordinate.getX(), finalCoordinate.getY()-2)):
                         finalCoordinate.setY(finalCoordinate.getY() - 2)
                         if Robot.countRobotsToWest(neighbours, finalCoordinate) < rc:
-                            # #TODO:  make case 3 function and call here
-                            # c3 = self.case3(xMin, yMax, neighbours, finalCoordinate)
-                            # if c3 == -1:
-                            #     return -1
-                            # else:
-                            #     finalCoordinate = c3
                             return finalCoordinate
                 # else:
                 #     return -1

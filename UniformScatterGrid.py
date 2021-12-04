@@ -12,6 +12,7 @@ class UniformScatterGrid:
 
     def __init__(self):
         self.n = 75
+        self.k = 15
         self.robots = [] 
         positions = set()
         for i in range(self.n):
@@ -77,6 +78,9 @@ class UniformScatterGrid:
 
         return ids[max_priority_id_index]
 
+    def selectRandomK(self):
+        return random.sample(range(0, self.n), self.k)
+
     @staticmethod
     def simulation_completed(coordinates, rc):
         coordinates.sort()
@@ -113,9 +117,10 @@ class UniformScatterGrid:
             new_coordinates = []
             isFinished = False
             positions = defaultdict(list)
+            randomRobots = set(self.selectRandomK())
             for robot in self.robots:
                 coordinate = robot.coordinate
-                if random.randint(0, 1):
+                if robot.id in randomRobots:
                     neighbours = robot.look(self.robots)
                     coordinate = robot.compute(self.n, gridFinal, xMin, yMax, neighbours)
 

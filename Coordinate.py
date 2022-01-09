@@ -8,6 +8,17 @@ class Coordinate:
     def __str__ (self):
         return f"Coordinate: {self.x}, {self.y}"
 
+    def __repr__ (self):
+        return f"Coordinate: {self.x}, {self.y}"
+
+    def __eq__(self, __o: object) -> bool:
+        return self.x == __o.x and self.y == __o.y
+
+    def __lt__(self, __o: object) -> bool:
+        if self.y == __o.y:
+            return self.x < __o.x
+        return self.y < __o.y
+
     def getX(self):
         return self.x
 

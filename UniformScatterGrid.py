@@ -2,15 +2,18 @@ import random
 import math
 import time
 from collections import defaultdict
+
+import pygame
+import sys
 from Coordinate import Coordinate
 from Robot import Robot
 import Grid
 class UniformScatterGrid:
 
     def __init__(self):
-        self.n = 50
+        self.n = 75
         self.robots = [] 
-        positions = {}
+        positions = set()
         for i in range(self.n):
             while True:
                 xCor = random.randint(0, Grid.WINDOW_WIDTH) // Grid.BLOCK_SIZE
@@ -20,6 +23,7 @@ class UniformScatterGrid:
                     continue
                 else:
                     self.robots.append(Robot(i, Coordinate(xCor, yCor)))
+                    positions.add(key)
                     break
 
         # self.robots.append(Robot(0, Coordinate(0, 0)))
@@ -52,11 +56,11 @@ class UniformScatterGrid:
     def assignMovementPritority(self, ids, new_coordinates):
         priorities = {}
         for index, id in enumerate(ids):
-            if self.robots[id].coordinate.getX() >= new_coordinates[id].getX():
+            if self.robots[id].coordinate.getX() > new_coordinates[id].getX():
                 priorities[index] = 4
             elif self.robots[id].coordinate.getX() < new_coordinates[id].getX():
                 priorities[index] = 3
-            elif self.robots[id].coordinate.getY() <= new_coordinates[id].getY():
+            elif self.robots[id].coordinate.getY() < new_coordinates[id].getY():
                 priorities[index] = 2
             else:
                 priorities[index] = 1
@@ -73,6 +77,24 @@ class UniformScatterGrid:
 
         return ids[max_priority_id_index]
 
+    @staticmethod
+    def simulation_completed(coordinates, rc):
+        coordinates.sort()
+        #print(coordinates)
+        print(len(coordinates))
+
+        count = 0
+        for i in range(0, len(coordinates)-1):
+            if coordinates[i+1].getY() - coordinates[i].getY() == 2:
+                count = 0
+            elif coordinates[i+1].getX() - coordinates[i].getX() == 2 and coordinates[i+1].getY() == coordinates[i].getY():
+                count+=1
+            else:
+                return False
+            if count >= rc:
+                return False
+        return True
+            
 
     def executeCycle(self):
         xMin = self.findXmin()
@@ -85,26 +107,27 @@ class UniformScatterGrid:
 
         print (self.robots)
 
-        next_move = True
+        isFinished = False
 
-        while next_move:
+        while not isFinished:
             new_coordinates = []
-            next_move = False
+            isFinished = False
             positions = defaultdict(list)
-
             for robot in self.robots:
-                neighbours = robot.look(self.robots)
-                coordinate = robot.compute(self.n, gridFinal, xMin, yMax, neighbours)
+                coordinate = robot.coordinate
+                if random.randint(0, 1):
+                    neighbours = robot.look(self.robots)
+                    coordinate = robot.compute(self.n, gridFinal, xMin, yMax, neighbours)
 
-                if not robot.coordinate.isEqual(coordinate):
-                    next_move = True
+                    # if not robot.coordinate.isEqual(coordinate):
+                    #     next_move = True
 
                 new_coordinates.append(coordinate)
                 
                 positions[hash(coordinate)].append(robot.id)
                 
             print("look compute done")
-
+            
             for _, ids in positions.items():
                 print(ids)
                 max_priority_id = self.get_max_priority(ids, new_coordinates)
@@ -113,11 +136,11 @@ class UniformScatterGrid:
             Grid.render(self.robots)
 
             print (self.robots)
-
+            isFinished = UniformScatterGrid.simulation_completed(new_coordinates, gridFinal[0])
 
 if __name__ == "__main__":
 
-    for i in range(50):
+    for i in range(10):
         obj = UniformScatterGrid()
         obj.executeCycle()
         print("Finished ", i)
